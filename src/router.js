@@ -10,13 +10,13 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/",
-      name: "ListPost",
+      path: '/',
+      name: 'ListPost',
       component: ListPost
     },
     {
-      path: "/PostDetail",
-      name: "PostDetail",
+      path: '/PostDetail/:id',
+      name: 'PostDetail',
       component: PostDetail
     }
   ]

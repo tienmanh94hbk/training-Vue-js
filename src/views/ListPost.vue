@@ -1,11 +1,19 @@
 <template>
-  <div>
-    <app-posts></app-posts>
-  </div>
+    <div>
+        <div>
+            <Post></Post>
+        </div>
+    </div>
 </template>
 
 <script>
+    import Post from '../components/Posts'
 
+    export default {
+        components: {
+            Post,
+        },
+    }
 </script>
 
 <style>
