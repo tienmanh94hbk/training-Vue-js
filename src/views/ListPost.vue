@@ -31,7 +31,7 @@
                     this.posts = res.body;
                 }).catch(function (error) {
                 console.log('Error: ', error);
-            }).then(()=>{
+            }).then(() => {
                 const objNewPost = this.$route.params.newPost;
                 if (objNewPost) {
                     this.posts.unshift(objNewPost);

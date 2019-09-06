@@ -4,7 +4,7 @@
         <form @submit.prevent="getFormValues">
             <div class="form-group" :class="{ 'form-group--error': $v.id.$error }">
                 <label>
-                    <input type="number" placeholder="Id" name="id" v-model.trim="$v.id.$model"/>
+                    <input name="id" placeholder="Id" type="text" v-model.trim="$v.id.$model" v-numericOnly/>
                 </label>
             </div>
             <div class="error" v-if="!$v.id.required">Id is not required</div>
@@ -13,7 +13,8 @@
             </div>
             <div class="form-group" :class="{ 'form-group--error': $v.userId.$error }">
                 <label>
-                    <input name="userId" type="number" placeholder="UserID" v-model.trim="$v.userId.$model"/>
+                    <input name="userId" type="text" placeholder="UserID" v-model.trim="$v.userId.$model"
+                           v-numericOnly/>
                 </label>
             </div>
             <div class="error" v-if="!$v.userId.required">UserId is not required</div>
@@ -30,10 +31,10 @@
             <div class="error" v-if="!$v.title.maxLength">Tittle must have at longest {{$v.title.$params.maxLength.max}}
                 letters.
             </div>
-            <div class="error" v-if="!$v.title.alphaNum">Title must be characters type</div>
+            <div class="error" v-if="!$v.title.alpha">Title must be characters type</div>
             <div class="form-group" :class="{ 'form-group--error': $v.body.$error }">
                 <label>
-                    <input name="body" type="text" placeholder="Body" v-model.trim="$v.body.$model" />
+                    <input name="body" type="text" placeholder="Body" v-model.trim="$v.body.$model"/>
                 </label>
             </div>
             <button :disabled="$v.$invalid" type="submit" id="button-save">Save Post</button>
@@ -42,15 +43,15 @@
 </template>
 
 <script>
-    import {required, maxLength, alphaNum} from 'vuelidate/lib/validators'
+    import {required, maxLength, alpha} from 'vuelidate/lib/validators'
 
     export default {
         data() {
             return {
-                    id: '',
-                    userId: '',
-                    title: '',
-                    body: '',
+                id: '',
+                userId: '',
+                title: '',
+                body: '',
             }
         },
         validations: {
@@ -65,11 +66,9 @@
             title: {
                 required,
                 maxLength: maxLength(256),
-                alphaNum
+                alpha
             },
-            body:{
-
-            }
+            body: {}
         },
         methods: {
             getFormValues: function () {
@@ -80,7 +79,7 @@
                         title: this.title,
                         body: this.body
                     };
-                    if(Object.keys(post).length) {
+                    if (Object.keys(post).length) {
                         this.$router.push({
                             name: 'ListPost',
                             params: {
