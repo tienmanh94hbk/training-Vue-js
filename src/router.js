@@ -15,7 +15,7 @@ export default new Router({
       component: ListPost
     },
     {
-      path: '/PostDetail/:id',
+      path: '/PostDetail',
       name: 'PostDetail',
       component: PostDetail
     }

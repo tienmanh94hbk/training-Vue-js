@@ -31,7 +31,9 @@
             sendData(post) {
                 this.$router.push({
                     name: 'PostDetail',
-                    params: {id: post.id}
+                    params: {
+                        postDetail: post
+                    }
                 });
             }
         }
