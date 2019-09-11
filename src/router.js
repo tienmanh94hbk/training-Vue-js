@@ -26,6 +26,6 @@ export default new Router({
       name: 'NewPost',
       component: NewPost,
       props: true,
-    }
+    },
   ]
 });

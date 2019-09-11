@@ -2,50 +2,61 @@
     <div class="card-body">
         <h1>New Post</h1>
         <form @submit.prevent="getFormValues">
-            <div class="form-group" :class="{ 'form-group--error': $v.id.$error }">
+            <validation-provider rules="required|numeric|max:8" v-slot="{ errors }">
                 <label>
-                    <input name="id" placeholder="Id" type="text" v-model.trim="$v.id.$model" v-numericOnly/>
+                    <input v-model="id" placeholder="Id" name="id" type="text" v-numericOnly/>
                 </label>
-            </div>
-            <div class="error" v-if="!$v.id.required">Id is not required</div>
-            <div class="error" v-if="!$v.id.maxLength">Id must have at longest {{$v.id.$params.maxLength.max}}
-                letters.
-            </div>
-            <div class="form-group" :class="{ 'form-group--error': $v.userId.$error }">
+                <p class="errors">{{ errors[0] }}</p>
+            </validation-provider>
+            <validation-provider rules="required|numeric|max:8" v-slot="{ errors }">
                 <label>
-                    <input name="userId" type="text" placeholder="UserID" v-model.trim="$v.userId.$model"
-                           v-numericOnly/>
+                    <input v-model="userId" placeholder="UserId" name="userId" type="text" v-numericOnly/>
                 </label>
-            </div>
-            <div class="error" v-if="!$v.userId.required">UserId is not required</div>
-            <div class="error" v-if="!$v.userId.maxLength">UserId must have at longest
-                {{$v.userId.$params.maxLength.max}}
-                letters.
-            </div>
-            <div class="form-group" :class="{ 'form-group--error': $v.title.$error }">
+                <p class="errors">{{ errors[0] }}</p>
+            </validation-provider>
+            <validation-provider rules="required|max:256|regex:[0-9a-fA-F]" v-slot="{ errors }">
                 <label>
-                    <input name="title" type="text" placeholder="Title" v-model.trim="$v.title.$model"/>
+                    <input v-model="title" placeholder="title" name="title" type="text" />
                 </label>
-            </div>
-            <div class="error" v-if="!$v.title.required">Field is required</div>
-            <div class="error" v-if="!$v.title.maxLength">Tittle must have at longest {{$v.title.$params.maxLength.max}}
-                letters.
-            </div>
-            <div class="error" v-if="!$v.title.alpha">Title must be characters type</div>
-            <div class="form-group" :class="{ 'form-group--error': $v.body.$error }">
+                <p class="errors">{{ errors[0] }}</p>
+            </validation-provider>
+            <validation-provider  v-slot="{ errors }">
                 <label>
-                    <input name="body" type="text" placeholder="Body" v-model.trim="$v.body.$model"/>
+                    <input v-model="body" placeholder="body" name="body" type="text" />
                 </label>
-            </div>
-            <button :disabled="$v.$invalid" type="submit" id="button-save">Save Post</button>
+                <p class="errors">{{ errors[0] }}</p>
+            </validation-provider>
+            <button type="submit" id="button-save">Save Post</button>
         </form>
     </div>
 </template>
 
 <script>
-    import {required, maxLength, alpha} from 'vuelidate/lib/validators'
+    import { ValidationProvider, extend } from 'vee-validate';
+    import {required, max, numeric,regex} from 'vee-validate/dist/rules';
+
+    extend('required', {
+        ...required,
+        message: 'The field is required.'
+    });
+    extend('numeric',{
+        ...numeric,
+        message: 'The filed may only contain numeric characters.'
+    });
+    extend('max',{
+        ...max,
+        message: 'The filed longer limit number characters.'
+    });
+    extend('regex',{
+        ...regex,
+        message: 'The filed can not input Vietnamese letters'
+    });
+
 
     export default {
+        components: {
+            ValidationProvider
+        },
         data() {
             return {
                 id: '',
@@ -54,39 +65,21 @@
                 body: '',
             }
         },
-        validations: {
-            id: {
-                required,
-                maxLength: maxLength(8)
-            },
-            userId: {
-                required,
-                maxLength: maxLength(8)
-            },
-            title: {
-                required,
-                maxLength: maxLength(256),
-                alpha
-            },
-            body: {}
-        },
         methods: {
             getFormValues: function () {
-                if (!this.$v.$invalid) {
-                    const post = {
-                        id: this.id,
-                        userId: this.userId,
-                        title: this.title,
-                        body: this.body
-                    };
-                    if (Object.keys(post).length) {
-                        this.$router.push({
-                            name: 'ListPost',
-                            params: {
-                                newPost: post
-                            }
-                        });
-                    }
+                const post = {
+                    id: this.id,
+                    userId: this.userId,
+                    title: this.title,
+                    body: this.body
+                };
+                if(Object.keys(post).length) {
+                    this.$router.push({
+                        name: 'ListPost',
+                        params: {
+                            newPost: post
+                        }
+                    });
                 }
             }
         }
@@ -125,11 +118,12 @@
     }
 
     #button-save {
-        font-size: 16px;
-        background-color: #008cba;
+        font-size: 24px;
+        background-color: blue;
+        color: white;
     }
 
-    .error {
+    .errors {
         color: red;
     }
 </style>
